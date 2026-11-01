@@ -8,6 +8,13 @@ export CI=true
 step() { echo; echo "================ $* ================"; }
 die()  { echo; echo "!!!!! FAIL: $* !!!!!"; exit 1; }
 
+step "Android SDK check"
+export ANDROID_HOME="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+echo "ANDROID_HOME=$ANDROID_HOME"
+ls "$ANDROID_HOME" 2>&1 | head
+SDKM="$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -1)"
+if [ -n "$SDKM" ]; then yes | "$SDKM" --licenses >/dev/null 2>&1 || true; echo "licenses accepted"; fi
+
 step "Versions"
 node -v; npm -v; java -version 2>&1 | head -1
 
@@ -22,6 +29,7 @@ rm -rf android
 npx cap add android || die "cap add android"
 
 step "4. Icons + permissions"
+echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 python3 -m pip install --quiet --break-system-packages pillow 2>&1 | tail -1
 python3 scripts/icons.py || echo "(icons skip - default icon chalega)"
 node scripts/patch-android.js || die "patch-android"

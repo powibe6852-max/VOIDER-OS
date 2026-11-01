@@ -23,8 +23,6 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - uses: android-actions/setup-android@v3
-
       - name: Build APK (sab kuch scripts/build.sh me)
         run: bash scripts/build.sh
 

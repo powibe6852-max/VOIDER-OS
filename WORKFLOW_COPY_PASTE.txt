@@ -1,0 +1,55 @@
+name: Build VOIDER OS APK
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Build APK (sab kuch scripts/build.sh me)
+        run: bash scripts/build.sh
+
+      - name: Log ka akhiri hissa (fail par)
+        if: failure()
+        run: tail -n 80 logs/build.log || true
+
+      - name: Log file upload (hamesha)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: logs/build.log
+          if-no-files-found: ignore
+
+      - name: APK upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: VOIDER-OS-apk
+          path: VOIDER-OS.apk
+
+      - name: Releases me daal (phone se seedha download)
+        continue-on-error: true
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: VOIDER OS (latest build)
+          body: "Latest debug APK. VOIDER-OS.apk download kar ke install kar."
+          prerelease: true
+          files: VOIDER-OS.apk
