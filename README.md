@@ -1,44 +1,23 @@
-# VOIDER OS — APK banane ka tareeka
+# VOIDER OS — APK ek baar me
 
-## 1. GitHub pe daal (5 min)
-1. github.com pe **New repository** bana (naam kuch bhi, e.g. `voider-os`).
-2. Is zip ko **extract** kar, phir saari files (`.github` folder samet) repo me upload kar.
-   - Phone/PC browser se: repo page → **Add file → Upload files** → saari files drag kar → Commit.
-   - Dhyan: `.github/workflows/build-apk.yml` upload hona chahiye (hidden folder hai, PC pe "show hidden files" on kar).
-3. Branch ka naam `main` ya `master` ho.
+## Upload (yahi sabse zaroori hai)
+1. Zip **extract** kar. Andar `www`, `scripts`, `.github`, `package.json` ... dikhne chahiye.
+2. GitHub repo me in sabko **seedha repo ke root me** daal (folder ke andar folder nahi).
+3. `.github` folder hidden hota hai. Agar upload na ho paaye:
+   repo me **Add file → Create new file** → naam me likh `.github/workflows/build-apk.yml`
+   → `WORKFLOW_COPY_PASTE.txt` ka text paste kar → Commit.
 
-## 2. APK build
-- Commit karte hi **Actions** tab me "Build VOIDER OS APK" apne aap chalega (~6-10 min).
-- Nahi chala to: Actions → Build VOIDER OS APK → **Run workflow**.
-- Khatam hone par APK 2 jagah milega:
-  - **Releases** (right side) → `latest` → `VOIDER-OS.apk` (phone se seedha download).
-  - Actions run → **Artifacts** → `VOIDER-OS-apk`.
-- Phone me install: "Unknown sources / Install unknown apps" allow kar.
+## Build
+- Commit ke baad **Actions** tab → "Build VOIDER OS APK" apne aap chalega (8-12 min).
+- Na chale to: Actions → Build VOIDER OS APK → **Run workflow**.
+- Khatam hone par:
+  - **Releases → latest → VOIDER-OS.apk** (phone se seedha download), ya
+  - run page ke neeche **Artifacts → VOIDER-OS-apk**.
+- **Log file**: har run me (pass ya fail) Artifacts me `build-log` aati hai. Fail hone par red step khol ke akhiri lines bhi dikhti hain.
 
-## 3. App me setup
-1. **Settings** me Gemini API key daal (aistudio.google.com/apikey se free milti hai).
-2. **Awaaz engine = Gemini Natural** (default). Voice dropdown se mard ki awaaz chun (Orus / Charon / Algenib / Fenrir...).
-3. **▶ Natural voice test** daba. Neeche status dikhega (OK ya error ka reason).
-4. Mic 🎤 pehli baar permission maangega — Allow kar.
+## Build apne aap kya karta hai
+Mic plugin ke saath build karta hai. Agar wo fail ho to plugin hata ke dobara try karta hai, taaki APK zaroor ban jaye (us case me sirf mic button kaam nahi karega).
 
-## Terminal (Tab, ↑↓ aur neeche ki quick-keys bar ke saath)
-`help` likh. Kuch examples:
-```
-mkdir -p kaam/notes && cd kaam
-echo "pehli line" > a.txt
-echo "doosri" >> a.txt
-cat a.txt | grep -n doosri
-tree ~
-ai ek joke suna
-cat a.txt | ai summarize kar
-voice Charon
-say Namaste
-nano a.txt
-```
-
-## Agar kuch na chale
-- **Awaaz abhi bhi robotic**: Settings me status dekh. "limit/quota" = Gemini free TTS limit khatam, thodi der baad theek ho jayegi (tab tak phone ki awaaz). "API key problem" = key check kar.
-- **Mic nahi chal raha**: phone me Google app / Speech Services updated hona chahiye, aur mic permission on.
-- **Top bar status bar ke neeche chhup raha**: capacitor.config.json me `adjustMarginsForEdgeToEdge` ko `"force"` kar de.
-- **Build fail**: Actions me red step kholke error copy kar, mujhe bhej.
-- Debug APK hai (Play Store ke liye nahi); apne phone pe install ke liye perfect.
+## App me setup
+Settings → Gemini API key → Awaaz engine = Gemini Natural → "Natural voice test" daba.
+Terminal me `help` likh.

@@ -3,3 +3,5 @@ android/
 www/lib/
 *.apk
 .DS_Store
+logs/
+VOIDER-OS.apk
