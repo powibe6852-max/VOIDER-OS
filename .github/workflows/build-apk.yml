@@ -1,0 +1,76 @@
+name: Build VOIDER OS APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Code lo
+        uses: actions/checkout@v4
+
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Java 21 setup
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Android SDK setup
+        uses: android-actions/setup-android@v3
+
+      - name: npm install
+        run: npm install --no-audit --no-fund
+
+      - name: three.js ko www/lib me copy kar
+        run: node scripts/prepare.js
+
+      - name: Android project bana
+        run: npx cap add android
+
+      - name: App icon (optional, fail hua to bhi chalega)
+        continue-on-error: true
+        run: |
+          npm install --no-save --no-audit --no-fund @capacitor/assets
+          npx capacitor-assets generate --android --iconBackgroundColor '#07060f' --iconBackgroundColorDark '#07060f'
+
+      - name: Permissions patch
+        run: node scripts/patch-android.js
+
+      - name: Sync
+        run: npx cap sync android
+
+      - name: Debug APK build
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: APK ka naam theek kar
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk VOIDER-OS.apk
+
+      - name: Artifact upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: VOIDER-OS-apk
+          path: VOIDER-OS.apk
+
+      - name: Releases me daal (phone se seedha download)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: VOIDER OS (latest build)
+          body: "Latest debug APK. Download VOIDER-OS.apk, phone me install kar."
+          prerelease: true
+          files: VOIDER-OS.apk

@@ -1,0 +1,12 @@
+{
+  "appId": "com.voidos.app",
+  "appName": "VOIDER OS",
+  "webDir": "www",
+  "backgroundColor": "#07060f",
+  "server": { "androidScheme": "https" },
+  "android": {
+    "backgroundColor": "#07060f",
+    "allowMixedContent": false,
+    "adjustMarginsForEdgeToEdge": "auto"
+  }
+}
